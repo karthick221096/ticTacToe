@@ -5,8 +5,11 @@ import lombok.Setter;
 
 public class Symbol {
 
-
     private char symbolChar;
+
+    public Symbol(char symbolChar) {
+        this.symbolChar= symbolChar;
+    }
 
     public char getSymbolChar() {
         return symbolChar;
@@ -14,10 +17,6 @@ public class Symbol {
 
     public void setSymbolChar(char symbolChar) {
         this.symbolChar = symbolChar;
-    }
-
-    public Symbol(char symbolChar) {
-        this.symbolChar= symbolChar;
     }
 
 

@@ -5,24 +5,43 @@ import exceptions.DuplicateSymbolException;
 import exceptions.PlayerCountException;
 import strategy.WinningStrategy;
 
+import java.security.PublicKey;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Game {
-    private List<Player> playerList;
+    private List<Player> players;
     private GameState gameState;
     private Board board;
     private List<WinningStrategy> winningStrategies;
     private Player winner;
     private int nextPlayerIndex;
+    private int dimensions;
+    private List<Move> moves;
 
-    public List<Player> getPlayerList() {
-        return playerList;
+    public Game(int dimensions, List<Player> players, List<WinningStrategy> winningStrategies) {
+        this.dimensions = dimensions;
+        this.players = players;
+        this.winningStrategies = winningStrategies;
+        this.board = new Board(dimensions);
+        this.moves=new ArrayList<>();
+        this.gameState = GameState.IN_PROGRESS;
+        this.nextPlayerIndex = 0;
+
     }
 
-    public void setPlayerList(List<Player> playerList) {
-        this.playerList = playerList;
+    public static Builder builder(){
+        return new Builder();
+    }
+
+    public List<Player> getplayers() {
+        return players;
+    }
+
+    public void setplayers(List<Player> players) {
+        this.players = players;
     }
 
     public GameState getGameState() {
@@ -64,6 +83,8 @@ public class Game {
     public void setNextPlayerIndex(int nextPlayerIndex) {
         this.nextPlayerIndex = nextPlayerIndex;
     }
+
+
 
     // whatever provided by client has to be put in builder pattern
     // for validation
@@ -121,6 +142,37 @@ public class Game {
             }
         }
 
+        public void validate() throws BotCountMoreThanOneException,DuplicateSymbolException,PlayerCountException{
+            validateBotCount();
+            validateSymbolUniqueness();
+            validateDimensionAndPlayerCount();
+        }
 
+        public Game build() throws BotCountMoreThanOneException,DuplicateSymbolException,PlayerCountException{
+            validate();
+            return new Game(dimensions, players, winningStrategies);
+        }
+
+
+    }
+    private boolean validateMove(Move move){
+        int row = move.getCell().getRow();
+        int col = move.getCell().getCol();
+        if(row>=board.getSize() || col>=board.getSize()){
+            return false;
+        }
+        if(board.getBoard()){
+
+    }
+
+    public void makeMove() {
+        Player currentMovePlayer = players.get(nextPlayerIndex);
+        System.out.println("it is "+currentMovePlayer.getName()+" 's turn, please make a move");
+
+        Move currentPlayerMove = currentMovePlayer.makeMove(board);
+
+        if(validateMove(currentPlayerMove)){
+            System.out.println("invalid move please try again");
+        }
     }
 }
